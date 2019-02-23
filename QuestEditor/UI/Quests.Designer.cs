@@ -42,7 +42,7 @@
             this.questsGroup.Dock = System.Windows.Forms.DockStyle.Left;
             this.questsGroup.Location = new System.Drawing.Point(0, 0);
             this.questsGroup.Name = "questsGroup";
-            this.questsGroup.Size = new System.Drawing.Size(253, 595);
+            this.questsGroup.Size = new System.Drawing.Size(253, 617);
             this.questsGroup.TabIndex = 0;
             this.questsGroup.TabStop = false;
             this.questsGroup.Text = "Quests";
@@ -51,9 +51,9 @@
             // 
             this.questList.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.questList.FormattingEnabled = true;
-            this.questList.Location = new System.Drawing.Point(3, 42);
+            this.questList.Location = new System.Drawing.Point(3, 51);
             this.questList.Name = "questList";
-            this.questList.Size = new System.Drawing.Size(247, 550);
+            this.questList.Size = new System.Drawing.Size(247, 563);
             this.questList.TabIndex = 2;
             this.questList.DoubleClick += new System.EventHandler(this.questList_DoubleClick);
             // 
@@ -73,7 +73,7 @@
             this.questGroup.Dock = System.Windows.Forms.DockStyle.Fill;
             this.questGroup.Location = new System.Drawing.Point(253, 0);
             this.questGroup.Name = "questGroup";
-            this.questGroup.Size = new System.Drawing.Size(706, 595);
+            this.questGroup.Size = new System.Drawing.Size(706, 617);
             this.questGroup.TabIndex = 1;
             this.questGroup.TabStop = false;
             // 
@@ -84,7 +84,7 @@
             this.Controls.Add(this.questGroup);
             this.Controls.Add(this.questsGroup);
             this.Name = "Quests";
-            this.Size = new System.Drawing.Size(959, 595);
+            this.Size = new System.Drawing.Size(959, 617);
             this.questsGroup.ResumeLayout(false);
             this.questsGroup.PerformLayout();
             this.ResumeLayout(false);

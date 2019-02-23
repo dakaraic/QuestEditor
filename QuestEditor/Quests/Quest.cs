@@ -9,16 +9,27 @@ namespace QuestEditor.Quests
     public class Quest
     {
         public ushort ID { get; set; }
-        public byte[] Data { get; set; }
         public int NameID { get; set; }
-        public string Name => !Main.QuestDialog.TryGetValue((uint) NameID, out var name) ? "Unnamed Quest" : name;
+        public string Name
+        {
+            get
+            {
+                if (Main.QuestDialog == null || !Main.QuestDialog.TryGetValue((uint)NameID, out var name))
+                {
+                    return "Unnamed Quest";
+                }
+
+                return name;
+            }
+        }
+
         public int BriefID { get; set; }
         public byte Region { get; set; }
-        public QuestType Type { get; set; }
+        public QuestType Type { get; set; } = QuestType.QT_NORMAL;
         public bool IsRepeatable { get; set; }
-        public DailyQuestType DailyQuestType { get; set; }
-        public QuestStartCondition StartCondition { get; set; }
-        public QuestEndCondition EndCondition { get; set; }
+        public DailyQuestType DailyQuestType { get; set; } = DailyQuestType.DQT_NONE;
+        public QuestStartCondition StartCondition { get; set; } = new QuestStartCondition();
+        public QuestEndCondition EndCondition { get; set; } = new QuestEndCondition();
         public byte ActionCount { get; set; }
         public QuestAction[] Actions { get; set; }
         public QuestReward[] Rewards { get; set; }
@@ -28,9 +39,9 @@ namespace QuestEditor.Quests
         public int StartScriptID { get; set; }
         public int DoingScriptID { get; set; }
         public int EndScriptID { get; set; }
-        public string StartScript { get; set; }
-        public string DoingScript { get; set; }
-        public string EndScript { get; set; }
+        public string StartScript { get; set; } = "";
+        public string DoingScript { get; set; } = "";
+        public string EndScript { get; set; } = "";
         public ushort RewardNPC => EndCondition.NPCMobs.ToList().FirstOrDefault(m => m.Action == QuestNPCMobAction.QNMA_REWARD_OBJECT)?.ID ?? 0;
 
         public Quest()
@@ -84,7 +95,7 @@ namespace QuestEditor.Quests
                     quest.StartCondition.RequiresRace = reader.ReadBoolean();
                     quest.StartCondition.Race = reader.ReadByte();
                     quest.StartCondition.RequiresClass = reader.ReadBoolean();
-                    quest.StartCondition.Class = (CharacterClass) reader.ReadByte();
+                    quest.StartCondition.Class = (UseClassType) reader.ReadByte();
                     quest.StartCondition.RequiresGender = reader.ReadBoolean();
                     quest.StartCondition.Gender = (Gender) reader.ReadByte();
                     quest.StartCondition.RequiresDateMode = reader.ReadBoolean();
@@ -136,7 +147,7 @@ namespace QuestEditor.Quests
                     quest.EndCondition.RequiresRace = reader.ReadBoolean();
                     quest.EndCondition.Race = reader.ReadByte();
                     quest.EndCondition.RequiresClass = reader.ReadBoolean();
-                    quest.EndCondition.Class = (CharacterClass) reader.ReadByte();
+                    quest.EndCondition.Class = (UseClassType) reader.ReadByte();
                     quest.EndCondition.IsTimeLimit = reader.ReadBoolean();
                     reader.ReadBytes(1);
                     quest.EndCondition.TimeLimit = reader.ReadUInt16();

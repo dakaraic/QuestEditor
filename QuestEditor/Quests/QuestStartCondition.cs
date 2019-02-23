@@ -24,11 +24,11 @@ namespace QuestEditor.Quests
         public bool RequiresRace { get; set; }
         public byte Race { get; set; }
         public bool RequiresClass { get; set; }
-        public CharacterClass Class { get; set; }
+        public UseClassType Class { get; set; } = UseClassType.UCT_ALL;
         public bool RequiresGender { get; set; }
-        public Gender Gender { get; set; }
+        public Gender Gender { get; set; } = Gender.Female;
         public bool RequiresDateMode { get; set; }
-        public QuestStartDateMode DateMode { get; set; }
+        public QuestStartDateMode DateMode { get; set; } = QuestStartDateMode.QSDM_YEAR_TERM;
         public long StartDate { get; set; }
         public long EndDate { get; set; }
     }

@@ -7,6 +7,7 @@ namespace QuestEditor.Quests
         QNMA_REWARD_OBJECT = 0,
         QNMA_KILL = 1,
         QNMA_FIND = 2,
-        QNMA_CONVERSATION = 3
+        QNMA_CONVERSATION = 3,
+        QNMA_MAX = 4
     }
 }

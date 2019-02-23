@@ -4,8 +4,8 @@ namespace QuestEditor.Quests
 {
     public class QuestReward
     {
-        public QuestRewardUse Use { get; set; }
-        public QuestRewardType Type { get; set; }
+        public QuestRewardUse Use { get; set; } = QuestRewardUse.QRU_UNUSE;
+        public QuestRewardType Type { get; set; } = QuestRewardType.QRT_EXP;
         public QuestRewardValue Value { get; set; }
 
         public QuestReward()

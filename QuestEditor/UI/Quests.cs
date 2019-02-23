@@ -9,6 +9,7 @@ namespace QuestEditor.UI
     public partial class Quests : UserControl
     {
         public Quest Quest => Main.ActiveQuest;
+        private QuestView view;
 
         public Quests()
         {
@@ -23,13 +24,21 @@ namespace QuestEditor.UI
 
         public void RefreshQuest()
         {
+            if (Main.ActiveQuest == null)
+            {
+                questGroup.Text = "";
+                view = null;
+
+                questGroup.Controls.Clear();
+                return;
+            }
+
             // Refreshes the current quest.
             questGroup.Text = Main.ActiveQuest?.Name;
             questGroup.Controls.Clear();
-            questGroup.Controls.Add(new QuestView(){Dock = DockStyle.Fill});
 
-            // Populate all the options with the current quests's options.
-
+            view = new QuestView {Dock = DockStyle.Fill};
+            questGroup.Controls.Add(view);
         }
 
         private void searchBox_TextChanged(object sender, System.EventArgs e)
@@ -50,13 +59,45 @@ namespace QuestEditor.UI
 
         private void questList_DoubleClick(object sender, System.EventArgs e)
         {
-            if (questList.SelectedItem == null)
+            Open((Quest) questList.SelectedItem);
+        }
+
+        public void Open(Quest quest)
+        {
+            if (quest == null)
             {
                 return;
             }
 
-            Main.ActiveQuest = (Quest) questList.SelectedItem;
+            view?.Save();
+
+            Main.ActiveQuest = quest;
             RefreshQuest();
+        }
+
+        public void SaveView()
+        {
+            view?.Save();
+        }
+
+        public void DeleteCurrent()
+        {
+            if (questList.SelectedItem == null)
+            {
+                MessageBox.Show("You must select a quest to delete.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var quest = (Quest) questList.SelectedItem;
+            Main.QuestData?.Remove(quest.ID);
+
+            if (quest == Main.ActiveQuest)
+            {
+                Main.ActiveQuest = null;
+            }
+
+            RefreshQuest();
+            RefreshList();
         }
     }
 }

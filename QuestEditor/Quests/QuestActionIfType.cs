@@ -8,6 +8,7 @@ namespace QuestEditor.Quests
         QUEST_ACTION_IF_MOB_KILL = 0x1,
         QUEST_ACTION_IF_GATHER = 0x2,
         QUEST_ACTION_IF_TOUCH_OBJECT = 0x3,
-        QUEST_ACTION_IF_AREAINFO = 0x4
+        QUEST_ACTION_IF_AREAINFO = 0x4,
+        QUEST_ACTION_IF_MAX = 0x5
     }
 }

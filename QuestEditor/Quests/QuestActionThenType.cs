@@ -8,6 +8,7 @@ namespace QuestEditor.Quests
         QUEST_ACTION_THEN_DROP_ITEM = 0x1,
         QUEST_ACTION_THEN_DO_SCENARIO = 0x2,
         QUEST_ACTION_THEN_MOB_REGEN = 0x3,
-        QUEST_ACTION_THEN_CALL_PS = 0x4
+        QUEST_ACTION_THEN_CALL_PS = 0x4,
+        QUEST_ACTION_THEN_MAX = 0x5
     }
 }

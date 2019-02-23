@@ -12,6 +12,7 @@ namespace QuestEditor.Quests
         QRT_PET = 0x5,
         QRT_MINIHOUSE = 0x6,
         QRT_TITLE = 0x7,
-        QRT_KILLPOINT = 0x8D
+        QRT_KILLPOINT = 0x8,
+        QRT_MAX = 0x9
     }
 }

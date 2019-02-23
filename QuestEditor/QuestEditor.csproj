@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -47,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\BinaryWriterExtensions.cs" />
     <Compile Include="Quests\CharacterClass.cs" />
     <Compile Include="Quests\Gender.cs" />
     <Compile Include="IO\BinaryReader.cs" />
@@ -127,6 +131,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="favicon.ico" />
     <Content Include="Resources\red_logo_b.png" />
     <Content Include="Resources\red_logo_r.png" />
   </ItemGroup>
