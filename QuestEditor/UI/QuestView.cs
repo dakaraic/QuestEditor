@@ -13,6 +13,16 @@ namespace QuestEditor.UI
         public QuestView()
         {
             InitializeComponent();
+
+            gridActions.DataError += HandleDataError;
+            gridItems.DataError += HandleDataError;
+            gridMobs.DataError += HandleDataError;
+            gridRewards.DataError += HandleDataError;
+        }
+
+        private void HandleDataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.Cancel = true;
         }
 
         private void QuestView_Load(object sender, EventArgs e)
@@ -47,6 +57,12 @@ namespace QuestEditor.UI
             #endregion
 
             #region Add Enumeration Options
+
+            Action.ValueType = typeof(QuestNPCMobAction);
+            actionIfType.ValueType = typeof(QuestActionIfType);
+            actionThenType.ValueType = typeof(QuestActionThenType);
+            rewardUse.ValueType = typeof(QuestRewardUse);
+            rewardType.ValueType = typeof(QuestRewardType);
 
             for (var i = 0; i < (int) QuestType.QT_MAX_QUEST_TYPE; i++)
             {
@@ -241,11 +257,8 @@ namespace QuestEditor.UI
 
             #region Scripts
 
-            txtStartScriptID.Text = quest.StartScriptID.ToString();
             txtStartScript.Text = quest.StartScript;
-            txtDoingScriptID.Text = quest.DoingScriptID.ToString();
             txtDoingScript.Text = quest.DoingScript;
-            txtEndScriptID.Text = quest.EndScriptID.ToString();
             txtEndScript.Text = quest.EndScript;
 
             #endregion
@@ -368,9 +381,9 @@ namespace QuestEditor.UI
                     reward.Value.TitleElementNo = byte.Parse((string) row.Cells["rewardTitleElement"].Value);
                 }
 
-                quest.StartScriptID = int.Parse(txtStartScriptID.Text);
-                quest.DoingScriptID = int.Parse(txtDoingScriptID.Text);
-                quest.EndScriptID = int.Parse(txtEndScriptID.Text);
+                quest.StartScriptID = 0;
+                quest.DoingScriptID = 0;
+                quest.EndScriptID = 0;
 
                 quest.StartScript = txtStartScript.Text;
                 quest.DoingScript = txtDoingScript.Text;

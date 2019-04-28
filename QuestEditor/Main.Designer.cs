@@ -1,4 +1,6 @@
-﻿namespace QuestEditor
+﻿using System.Windows.Forms;
+
+namespace QuestEditor
 {
     partial class Main
     {
@@ -45,6 +47,12 @@
             this.newQuestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllQuestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.massModifiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.massEXPModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.massMoneyModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.massFameModifierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.inactiveLogo)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -102,7 +110,7 @@
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -110,46 +118,46 @@
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(143, 6);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Enabled = false;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Enabled = false;
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -158,7 +166,12 @@
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newQuestToolStripMenuItem,
             this.deleteAllQuestsToolStripMenuItem,
-            this.deleteToolStripMenuItem});
+            this.deleteToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.massModifiersToolStripMenuItem,
+            this.massEXPModifierToolStripMenuItem,
+            this.massMoneyModifierToolStripMenuItem,
+            this.massFameModifierToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -190,6 +203,48 @@
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(195, 6);
+            // 
+            // massModifiersToolStripMenuItem
+            // 
+            this.massModifiersToolStripMenuItem.Enabled = false;
+            this.massModifiersToolStripMenuItem.Name = "massModifiersToolStripMenuItem";
+            this.massModifiersToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.massModifiersToolStripMenuItem.Text = "Mass Modifiers";
+            // 
+            // massEXPModifierToolStripMenuItem
+            // 
+            this.massEXPModifierToolStripMenuItem.Enabled = false;
+            this.massEXPModifierToolStripMenuItem.Name = "massEXPModifierToolStripMenuItem";
+            this.massEXPModifierToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.massEXPModifierToolStripMenuItem.Text = "Modify EXP";
+            this.massEXPModifierToolStripMenuItem.Click += new System.EventHandler(this.MassEXPModifierToolStripMenuItem_Click);
+            // 
+            // massMoneyModifierToolStripMenuItem
+            // 
+            this.massMoneyModifierToolStripMenuItem.Enabled = false;
+            this.massMoneyModifierToolStripMenuItem.Name = "massMoneyModifierToolStripMenuItem";
+            this.massMoneyModifierToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.massMoneyModifierToolStripMenuItem.Text = "Modify Cen";
+            this.massMoneyModifierToolStripMenuItem.Click += new System.EventHandler(this.MassMoneyModifierToolStripMenuItem_Click);
+            // 
+            // massFameModifierToolStripMenuItem
+            // 
+            this.massFameModifierToolStripMenuItem.Enabled = false;
+            this.massFameModifierToolStripMenuItem.Name = "massFameModifierToolStripMenuItem";
+            this.massFameModifierToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.massFameModifierToolStripMenuItem.Text = "Modify Fame";
+            this.massFameModifierToolStripMenuItem.Click += new System.EventHandler(this.MassFameModifierToolStripMenuItem_Click);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.testToolStripMenuItem.Text = "test";
             // 
             // Main
             // 
@@ -235,6 +290,12 @@
         private System.Windows.Forms.ToolStripMenuItem deleteAllQuestsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newQuestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem massEXPModifierToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem massMoneyModifierToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem massFameModifierToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem massModifiersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
     }
 }
 

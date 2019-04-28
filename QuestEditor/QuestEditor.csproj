@@ -85,6 +85,24 @@
     <Compile Include="Quests\QuestStatus.cs" />
     <Compile Include="Quests\QuestType.cs" />
     <Compile Include="Quests\UseClassType.cs" />
+    <Compile Include="UI\MassCenEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MassCenEditor.Designer.cs">
+      <DependentUpon>MassCenEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MassEXPEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MassEXPEditor.Designer.cs">
+      <DependentUpon>MassEXPEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MassFameEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MassFameEditor.Designer.cs">
+      <DependentUpon>MassFameEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Quests.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -110,6 +128,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\MassCenEditor.resx">
+      <DependentUpon>MassCenEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MassEXPEditor.resx">
+      <DependentUpon>MassEXPEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MassFameEditor.resx">
+      <DependentUpon>MassFameEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Quests.resx">
       <DependentUpon>Quests.cs</DependentUpon>
     </EmbeddedResource>

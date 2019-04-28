@@ -9,7 +9,7 @@ namespace QuestEditor.UI
     public partial class Quests : UserControl
     {
         public Quest Quest => Main.ActiveQuest;
-        private QuestView view;
+        public QuestView View;
 
         public Quests()
         {
@@ -27,7 +27,7 @@ namespace QuestEditor.UI
             if (Main.ActiveQuest == null)
             {
                 questGroup.Text = "";
-                view = null;
+                View = null;
 
                 questGroup.Controls.Clear();
                 return;
@@ -37,8 +37,8 @@ namespace QuestEditor.UI
             questGroup.Text = Main.ActiveQuest?.Name;
             questGroup.Controls.Clear();
 
-            view = new QuestView {Dock = DockStyle.Fill};
-            questGroup.Controls.Add(view);
+            View = new QuestView {Dock = DockStyle.Fill};
+            questGroup.Controls.Add(View);
         }
 
         private void searchBox_TextChanged(object sender, System.EventArgs e)
@@ -52,6 +52,16 @@ namespace QuestEditor.UI
             }
 
             var quests = (from q in Main.QuestData.Values where q.ToString().ToLower().Contains(search.ToLower()) select q).ToArray();
+
+            if (search.StartsWith("/npc"))
+            {
+                var split = search.Split();
+
+                if (split.Length > 1 && ushort.TryParse(split[1], out var npcID))
+                {
+                    quests = (from q in Main.QuestData.Values where q.StartCondition.RequiresNPC && q.StartCondition.NPCID == npcID select q).ToArray();
+                }
+            }
 
             questList.Items.Clear();
             questList.Items.AddRange(quests.OrderBy(q => q.ID).ToArray());
@@ -69,7 +79,7 @@ namespace QuestEditor.UI
                 return;
             }
 
-            view?.Save();
+            View?.Save();
 
             Main.ActiveQuest = quest;
             RefreshQuest();
@@ -77,7 +87,7 @@ namespace QuestEditor.UI
 
         public void SaveView()
         {
-            view?.Save();
+            View?.Save();
         }
 
         public void DeleteCurrent()

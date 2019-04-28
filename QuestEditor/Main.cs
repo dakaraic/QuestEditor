@@ -2,6 +2,7 @@
 
 using QuestEditor.IO;
 using QuestEditor.Quests;
+using QuestEditor.UI;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Security;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
 
@@ -18,18 +21,26 @@ namespace QuestEditor
     public partial class Main : Form
     {
         public static Quest ActiveQuest;
+        public static UI.Quests Quests;
 
         public static Dictionary<uint, string> QuestDialog;
         public static Dictionary<ushort, Quest> QuestData;
 
         private ushort header;
         private string filePath;
-        private UI.Quests quests;
+        private bool hasVerifiedSSL;
 
         public Main()
         {
             InitializeComponent();
             header = 6;
+
+            massModifiersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                massEXPModifierToolStripMenuItem,
+                massMoneyModifierToolStripMenuItem,
+                massFameModifierToolStripMenuItem
+            });
         }
 
         /// <summary>
@@ -38,19 +49,13 @@ namespace QuestEditor
         /// <returns>The MAC address.</returns>
         private string GetMacAddress()
         {
-            const int MIN_MAC_ADDR_LENGTH = 12;
             var macAddress = string.Empty;
-            var maxSpeed = (long) -1;
             
             foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
             {
-                var tempMac = nic.GetPhysicalAddress().ToString();
-                if (nic.Speed > maxSpeed &&
-                    !string.IsNullOrEmpty(tempMac) &&
-                    tempMac.Length >= MIN_MAC_ADDR_LENGTH)
+                if (macAddress == string.Empty)
                 {
-                    maxSpeed = nic.Speed;
-                    macAddress = tempMac;
+                    macAddress = nic.GetPhysicalAddress().ToString();
                 }
             }
 
@@ -84,7 +89,7 @@ namespace QuestEditor
             ParseQuestDialog(filePath);
             ParseQuestData(filePath);
 
-            quests = new UI.Quests { Dock = DockStyle.Fill };
+            Quests = new UI.Quests { Dock = DockStyle.Fill };
 
             inactiveLogo.Visible = false;
             saveToolStripMenuItem.Enabled = true;
@@ -92,9 +97,13 @@ namespace QuestEditor
             deleteAllQuestsToolStripMenuItem.Enabled = true;
             newQuestToolStripMenuItem.Enabled = true;
             deleteToolStripMenuItem.Enabled = true;
+            massModifiersToolStripMenuItem.Enabled = true;
+            massEXPModifierToolStripMenuItem.Enabled = true;
+            massMoneyModifierToolStripMenuItem.Enabled = true;
+            massFameModifierToolStripMenuItem.Enabled = true;
 
-            mainPanel.Controls.Add(quests);
-            quests.RefreshList();
+            mainPanel.Controls.Add(Quests);
+            Quests.RefreshList();
         }
 
         private void ParseQuestDialog(string fileName)
@@ -157,7 +166,7 @@ namespace QuestEditor
 
         private void CloseFile()
         {
-            if (quests == null)
+            if (Quests == null)
             {
                 return;
             }
@@ -172,14 +181,18 @@ namespace QuestEditor
             deleteAllQuestsToolStripMenuItem.Enabled = false;
             newQuestToolStripMenuItem.Enabled = false;
             deleteToolStripMenuItem.Enabled = false;
+            massModifiersToolStripMenuItem.Enabled = false;
+            massEXPModifierToolStripMenuItem.Enabled = false;
+            massMoneyModifierToolStripMenuItem.Enabled = false;
+            massFameModifierToolStripMenuItem.Enabled = false;
 
-            mainPanel.Controls.Remove(quests);
+            mainPanel.Controls.Remove(Quests);
             inactiveLogo.Visible = true;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (quests == null)
+            if (Quests == null)
             {
                 return;
             }
@@ -189,7 +202,7 @@ namespace QuestEditor
 
         private void SaveFile()
         {
-            quests?.SaveView(); // Saves the currently active quest.
+            Quests?.SaveView(); // Saves the currently active quest.
 
             using (var stream = new MemoryStream())
             using (var writer = new BinaryWriter(stream))
@@ -428,8 +441,8 @@ namespace QuestEditor
 
             QuestData.Add(newID, quest);
 
-            quests.RefreshList();
-            quests.Open(quest);
+            Quests.RefreshList();
+            Quests.Open(quest);
         }
 
         private void deleteAllQuestsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -442,8 +455,8 @@ namespace QuestEditor
             QuestData.Clear();
             ActiveQuest = null;
 
-            quests.RefreshList();
-            quests.RefreshQuest();
+            Quests.RefreshList();
+            Quests.RefreshQuest();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -478,7 +491,7 @@ namespace QuestEditor
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            quests?.DeleteCurrent();
+            Quests?.DeleteCurrent();
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -489,20 +502,42 @@ namespace QuestEditor
                 Environment.Exit(0);
             }
 
-            var key = "AWEFASDFASV";
-            var mac = GetMacAddress();
-            var enc = EncryptString(mac, key);
-
-            using (var client = new WebClient())
+            try
             {
-                var result = client.DownloadString($"http://cdn.redware.co/quest/auth.php?mac={enc}&size={mac.Length}&key={key}");
+                ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
 
-                if (result != "ok")
+                using (var client = new WebClient())
                 {
-                    MessageBox.Show("You do not have access to this software.\nPurchase the product from RED Software to gain access.", "RED Software Quest Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Environment.Exit(0);
+                    var result = client.DownloadString($"https://cdn.redware.co/quest/auth.php?mac={GetMacAddress()}");
+
+                    if (!hasVerifiedSSL || result != "52FWG3DXU0ALPR03N3NK")
+                    {
+                        MessageBox.Show("You do not have access to this software.\nPurchase the product from RED Software to gain access.", "RED Software Quest Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Environment.Exit(0);
+                    }
                 }
             }
+            catch
+            {
+                MessageBox.Show("Failed to authenticate the user.", "RED Software Quest Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(0);
+            }
+        }
+
+        private bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        {
+            if (sslpolicyerrors != SslPolicyErrors.None)
+            {
+                return false;
+            }
+
+            if (certificate.GetCertHashString() != "ADDF4825DA5FDF5182DE6AD3ED8D4327244307A9" || certificate.Subject != "CN=sni219021.cloudflaressl.com, OU=PositiveSSL Multi-Domain, OU=Domain Control Validated")
+            {
+                Environment.Exit(0);
+            }
+
+            hasVerifiedSSL = true;
+            return true;
         }
 
         public static bool CheckForInternetConnection()
@@ -565,6 +600,24 @@ namespace QuestEditor
             }
 
             return Convert.ToBase64String(encrypted);
+        }
+
+        private void MassEXPModifierToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new MassEXPEditor();
+            form.ShowDialog(this);
+        }
+
+        private void MassMoneyModifierToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new MassCenEditor();
+            form.ShowDialog(this);
+        }
+
+        private void MassFameModifierToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new MassFameEditor();
+            form.ShowDialog(this);
         }
     }
 }
