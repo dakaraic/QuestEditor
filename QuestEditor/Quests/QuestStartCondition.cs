@@ -24,7 +24,7 @@ namespace QuestEditor.Quests
         public bool RequiresRace { get; set; }
         public byte Race { get; set; }
         public bool RequiresClass { get; set; }
-        public UseClassType Class { get; set; } = UseClassType.UCT_ALL;
+        public CharacterClass Class { get; set; } = CharacterClass.None;
         public bool RequiresGender { get; set; }
         public Gender Gender { get; set; } = Gender.Female;
         public bool RequiresDateMode { get; set; }

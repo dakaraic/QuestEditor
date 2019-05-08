@@ -74,10 +74,10 @@ namespace QuestEditor.UI
                 cmbDailyType.Items.Add((DailyQuestType) i);
             }
 
-            for (var i = 0; i < (int) UseClassType.MAX_USECLASSTYPE; i++)
+            for (var i = 0; i < (int) CharacterClass.Max; i++)
             {
-                cmbClass.Items.Add((UseClassType) i);
-                cmbEndClass.Items.Add((UseClassType) i);
+                cmbClass.Items.Add((CharacterClass) i);
+                cmbEndClass.Items.Add((CharacterClass) i);
             }
 
             for (var i = 0; i < (int) Gender.Max; i++)
@@ -296,7 +296,7 @@ namespace QuestEditor.UI
                 quest.StartCondition.RequiresRace = chkRace.Checked;
                 quest.StartCondition.Race = byte.Parse(txtRace.Text);
                 quest.StartCondition.RequiresClass = chkClass.Checked;
-                quest.StartCondition.Class = (UseClassType) cmbClass.SelectedIndex;
+                quest.StartCondition.Class = (CharacterClass) cmbClass.SelectedIndex;
                 quest.StartCondition.RequiresGender = chkGender.Checked;
                 quest.StartCondition.Gender = (Gender) cmbGender.SelectedIndex;
                 quest.StartCondition.RequiresDateMode = chkDate.Checked;

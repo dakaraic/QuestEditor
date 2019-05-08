@@ -46,8 +46,8 @@ namespace QuestEditor.Quests
 
         public Quest()
         {
-            Actions = new[] {new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction()};
-            Rewards = new[] {new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward()};
+            Actions = new[] { new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction(), new QuestAction() };
+            Rewards = new[] { new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward(), new QuestReward() };
         }
 
         public static Quest Parse(byte[] data)
@@ -64,9 +64,9 @@ namespace QuestEditor.Quests
                     quest.NameID = reader.ReadInt32();
                     quest.BriefID = reader.ReadInt32();
                     quest.Region = reader.ReadByte();
-                    quest.Type = (QuestType) reader.ReadByte();
+                    quest.Type = (QuestType)reader.ReadByte();
                     quest.IsRepeatable = reader.ReadBoolean();
-                    quest.DailyQuestType = (DailyQuestType) reader.ReadByte();
+                    quest.DailyQuestType = (DailyQuestType)reader.ReadByte();
                     reader.ReadBytes(4);
 
                     // Start Condition
@@ -95,11 +95,11 @@ namespace QuestEditor.Quests
                     quest.StartCondition.RequiresRace = reader.ReadBoolean();
                     quest.StartCondition.Race = reader.ReadByte();
                     quest.StartCondition.RequiresClass = reader.ReadBoolean();
-                    quest.StartCondition.Class = (UseClassType) reader.ReadByte();
+                    quest.StartCondition.Class = (CharacterClass) reader.ReadByte();
                     quest.StartCondition.RequiresGender = reader.ReadBoolean();
-                    quest.StartCondition.Gender = (Gender) reader.ReadByte();
+                    quest.StartCondition.Gender = (Gender)reader.ReadByte();
                     quest.StartCondition.RequiresDateMode = reader.ReadBoolean();
-                    quest.StartCondition.DateMode = (QuestStartDateMode) reader.ReadByte();
+                    quest.StartCondition.DateMode = (QuestStartDateMode)reader.ReadByte();
                     reader.ReadBytes(4);
                     quest.StartCondition.StartDate = reader.ReadInt64();
                     quest.StartCondition.EndDate = reader.ReadInt64();
@@ -118,7 +118,7 @@ namespace QuestEditor.Quests
                         npcMob.IsRequired = reader.ReadBoolean();
                         reader.ReadBytes(1);
                         npcMob.ID = reader.ReadUInt16();
-                        npcMob.Action = (QuestNPCMobAction) reader.ReadByte();
+                        npcMob.Action = (QuestNPCMobAction)reader.ReadByte();
                         npcMob.Count = reader.ReadByte();
                         npcMob.TargetGroup = reader.ReadByte();
                         reader.ReadBytes(1);
@@ -147,7 +147,7 @@ namespace QuestEditor.Quests
                     quest.EndCondition.RequiresRace = reader.ReadBoolean();
                     quest.EndCondition.Race = reader.ReadByte();
                     quest.EndCondition.RequiresClass = reader.ReadBoolean();
-                    quest.EndCondition.Class = (UseClassType) reader.ReadByte();
+                    quest.EndCondition.Class = (UseClassType)reader.ReadByte();
                     quest.EndCondition.IsTimeLimit = reader.ReadBoolean();
                     reader.ReadBytes(1);
                     quest.EndCondition.TimeLimit = reader.ReadUInt16();
@@ -160,10 +160,10 @@ namespace QuestEditor.Quests
                     {
                         var action = quest.Actions[i];
 
-                        action.IfType = (QuestActionIfType) reader.ReadByte();
+                        action.IfType = (QuestActionIfType)reader.ReadByte();
                         reader.ReadBytes(3);
                         action.IfTarget = reader.ReadInt32();
-                        action.ThenType = (QuestActionThenType) reader.ReadByte();
+                        action.ThenType = (QuestActionThenType)reader.ReadByte();
                         reader.ReadBytes(3);
                         action.ThenTarget = reader.ReadInt32();
                         action.ThenPercent = reader.ReadInt32();
@@ -178,8 +178,8 @@ namespace QuestEditor.Quests
                     {
                         var reward = quest.Rewards[i];
 
-                        reward.Use = (QuestRewardUse) reader.ReadByte();
-                        reward.Type = (QuestRewardType) reader.ReadByte();
+                        reward.Use = (QuestRewardUse)reader.ReadByte();
+                        reward.Type = (QuestRewardType)reader.ReadByte();
                         reader.ReadBytes(2);
 
                         switch (reward.Type)
@@ -226,8 +226,8 @@ namespace QuestEditor.Quests
                     }
 
                     quest.ScriptStartSize = reader.ReadUInt16();
-                    quest.ScriptEndSize = reader.ReadUInt16();
                     quest.ScriptDoingSize = reader.ReadUInt16();
+                    quest.ScriptEndSize = reader.ReadUInt16();
                     reader.ReadBytes(2);
                     quest.StartScriptID = reader.ReadInt32();
                     quest.DoingScriptID = reader.ReadInt32();

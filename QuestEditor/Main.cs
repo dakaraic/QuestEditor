@@ -11,7 +11,6 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Security;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
@@ -67,7 +66,7 @@ namespace QuestEditor
             using (var dialog = new OpenFileDialog())
             {
                 dialog.Title = "Open QuestData.shn";
-                dialog.Filter = "QuestData.shn|QuestData.shn";
+                dialog.Filter = "SHN File|*.shn";
 
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -108,7 +107,7 @@ namespace QuestEditor
 
         private void ParseQuestDialog(string fileName)
         {
-            var path = fileName.Replace("QuestData", "QuestDialog");
+            var path = Path.GetDirectoryName(fileName) + "/QuestDialog.shn";
 
             if (!File.Exists(path))
             {
@@ -212,185 +211,186 @@ namespace QuestEditor
 
                 foreach (var quest in QuestData.Values)
                 {
-                    using (var questStream = new MemoryStream())
-                    using (var questWriter = new BinaryWriter(questStream))
+                    var lengthPosition = stream.Position;
+                    var startLength = stream.Length;
+
+                    writer.Write(0);
+                    writer.Write(quest.ID);
+                    writer.Fill(2);
+                    writer.Write(quest.NameID);
+                    writer.Write(quest.BriefID);
+                    writer.Write(quest.Region);
+                    writer.Write((byte)quest.Type);
+                    writer.Write(quest.IsRepeatable);
+                    writer.Write((byte)quest.DailyQuestType);
+                    writer.Fill(4);
+
+                    writer.Write(quest.StartCondition.IsWaitListView);
+                    writer.Write(quest.StartCondition.IsWaitListProgress);
+                    writer.Write(quest.StartCondition.RequiresLevel);
+                    writer.Write(quest.StartCondition.MinLevel);
+                    writer.Write(quest.StartCondition.MaxLevel);
+                    writer.Write(quest.StartCondition.RequiresNPC);
+                    writer.Write(quest.StartCondition.NPCID);
+                    writer.Write(quest.StartCondition.RequiresItem);
+                    writer.Fill(1);
+                    writer.Write(quest.StartCondition.ItemID);
+                    writer.Write(quest.StartCondition.ItemLot);
+                    writer.Write(quest.StartCondition.RequiresLocation);
+                    writer.Fill(1);
+                    writer.Write(quest.StartCondition.LocationMapID);
+                    writer.Fill(2);
+                    writer.Write(quest.StartCondition.LocationX);
+                    writer.Write(quest.StartCondition.LocationY);
+                    writer.Write(quest.StartCondition.LocationRange);
+                    writer.Write(quest.StartCondition.RequiresQuest);
+                    writer.Fill(1);
+                    writer.Write(quest.StartCondition.QuestID);
+                    writer.Write(quest.StartCondition.RequiresRace);
+                    writer.Write(quest.StartCondition.Race);
+                    writer.Write(quest.StartCondition.RequiresClass);
+                    writer.Write((byte)quest.StartCondition.Class);
+                    writer.Write(quest.StartCondition.RequiresGender);
+                    writer.Write((byte)quest.StartCondition.Gender);
+                    writer.Write(quest.StartCondition.RequiresDateMode);
+                    writer.Write((byte)quest.StartCondition.DateMode);
+                    writer.Fill(4);
+                    writer.Write(quest.StartCondition.StartDate);
+                    writer.Write(quest.StartCondition.EndDate);
+
+                    writer.Write(quest.EndCondition.IsWaitListProgress);
+                    writer.Write(quest.EndCondition.RequiresLevel);
+                    writer.Write(quest.EndCondition.Level);
+                    writer.Fill(1);
+
+                    for (var i = 0; i < 5; i++)
                     {
-                        questWriter.Write(quest.ID);
-                        questWriter.Fill(2);
-                        questWriter.Write(quest.NameID);
-                        questWriter.Write(quest.BriefID);
-                        questWriter.Write(quest.Region);
-                        questWriter.Write((byte) quest.Type);
-                        questWriter.Write(quest.IsRepeatable);
-                        questWriter.Write((byte) quest.DailyQuestType);
-                        questWriter.Fill(4);
+                        var mob = quest.EndCondition.NPCMobs[i];
 
-                        questWriter.Write(quest.StartCondition.IsWaitListView);
-                        questWriter.Write(quest.StartCondition.IsWaitListProgress);
-                        questWriter.Write(quest.StartCondition.RequiresLevel);
-                        questWriter.Write(quest.StartCondition.MinLevel);
-                        questWriter.Write(quest.StartCondition.MaxLevel);
-                        questWriter.Write(quest.StartCondition.RequiresNPC);
-                        questWriter.Write(quest.StartCondition.NPCID);
-                        questWriter.Write(quest.StartCondition.RequiresItem);
-                        questWriter.Fill(1);
-                        questWriter.Write(quest.StartCondition.ItemID);
-                        questWriter.Write(quest.StartCondition.ItemLot);
-                        questWriter.Write(quest.StartCondition.RequiresLocation);
-                        questWriter.Fill(1);
-                        questWriter.Write(quest.StartCondition.LocationMapID);
-                        questWriter.Fill(2);
-                        questWriter.Write(quest.StartCondition.LocationX);
-                        questWriter.Write(quest.StartCondition.LocationY);
-                        questWriter.Write(quest.StartCondition.LocationRange);
-                        questWriter.Write(quest.StartCondition.RequiresQuest);
-                        questWriter.Fill(1);
-                        questWriter.Write(quest.StartCondition.QuestID);
-                        questWriter.Write(quest.StartCondition.RequiresRace);
-                        questWriter.Write(quest.StartCondition.Race);
-                        questWriter.Write(quest.StartCondition.RequiresClass);
-                        questWriter.Write((byte) quest.StartCondition.Class);
-                        questWriter.Write(quest.StartCondition.RequiresGender);
-                        questWriter.Write((byte) quest.StartCondition.Gender);
-                        questWriter.Write(quest.StartCondition.RequiresDateMode);
-                        questWriter.Write((byte) quest.StartCondition.DateMode);
-                        questWriter.Fill(4);
-                        questWriter.Write(quest.StartCondition.StartDate);
-                        questWriter.Write(quest.StartCondition.EndDate);
-
-                        questWriter.Write(quest.EndCondition.IsWaitListProgress);
-                        questWriter.Write(quest.EndCondition.RequiresLevel);
-                        questWriter.Write(quest.EndCondition.Level);
-                        questWriter.Fill(1);
-
-                        for (var i = 0; i < 5; i++)
-                        {
-                            var mob = quest.EndCondition.NPCMobs[i];
-
-                            questWriter.Write(mob.IsRequired);
-                            questWriter.Fill(1);
-                            questWriter.Write(mob.ID);
-                            questWriter.Write((byte) mob.Action);
-                            questWriter.Write(mob.Count);
-                            questWriter.Write(mob.TargetGroup);
-                            questWriter.Fill(1);
-                        }
-
-                        for (var i = 0; i < 5; i++)
-                        {
-                            var item = quest.EndCondition.Items[i];
-
-                            questWriter.Write(item.IsRequired);
-                            questWriter.Fill(1);
-                            questWriter.Write(item.ID);
-                            questWriter.Write(item.Lot);
-                        }
-
-                        questWriter.Write(quest.EndCondition.RequiresLocation);
-                        questWriter.Fill(1);
-                        questWriter.Write(quest.EndCondition.LocationMapID);
-                        questWriter.Fill(2);
-                        questWriter.Write(quest.EndCondition.LocationX);
-                        questWriter.Write(quest.EndCondition.LocationY);
-                        questWriter.Write(quest.EndCondition.LocationRange);
-                        questWriter.Write(quest.EndCondition.IsScenario);
-                        questWriter.Fill(1);
-                        questWriter.Write(quest.EndCondition.ScenarioID);
-                        questWriter.Write(quest.EndCondition.RequiresRace);
-                        questWriter.Write(quest.EndCondition.Race);
-                        questWriter.Write(quest.EndCondition.RequiresClass);
-                        questWriter.Write((byte) quest.EndCondition.Class);
-                        questWriter.Write(quest.EndCondition.IsTimeLimit);
-                        questWriter.Fill(1);
-                        questWriter.Write(quest.EndCondition.TimeLimit);
-
-                        questWriter.Write(quest.ActionCount);
-                        questWriter.Fill(3);
-
-                        for (var i = 0; i < 10; i++)
-                        {
-                            var action = quest.Actions[i];
-
-                            questWriter.Write((byte) action.IfType);
-                            questWriter.Fill(3);
-                            questWriter.Write(action.IfTarget);
-                            questWriter.Write((byte) action.ThenType);
-                            questWriter.Fill(3);
-                            questWriter.Write(action.ThenTarget);
-                            questWriter.Write(action.ThenPercent);
-                            questWriter.Write(action.ThenMinCount);
-                            questWriter.Write(action.ThenMaxCount);
-                            questWriter.Write(action.TargetGroup);
-                            questWriter.Fill(3);
-                        }
-
-                        for (var i = 0; i < 12; i++)
-                        {
-                            var reward = quest.Rewards[i];
-
-                            questWriter.Write((byte) reward.Use);
-                            questWriter.Write((byte) reward.Type);
-                            questWriter.Fill(2);
-
-                            switch (reward.Type)
-                            {
-                                case QuestRewardType.QRT_EXP:
-                                    questWriter.Write(reward.Value.EXP);
-                                    break;
-                                case QuestRewardType.QRT_MONEY:
-                                    questWriter.Write(reward.Value.Money);
-                                    break;
-                                case QuestRewardType.QRT_ITEM:
-                                    questWriter.Write(reward.Value.ItemID);
-                                    questWriter.Write(reward.Value.ItemLot);
-                                    questWriter.Fill(4);
-                                    break;
-                                case QuestRewardType.QRT_ABSTATE:
-                                    questWriter.Write(reward.Value.AbStateKeepTime);
-                                    questWriter.Write(reward.Value.AbStateID);
-                                    questWriter.Write(reward.Value.AbStateStrength);
-                                    questWriter.Fill(1);
-                                    break;
-                                case QuestRewardType.QRT_FAME:
-                                    questWriter.Write(reward.Value.Fame);
-                                    questWriter.Fill(4);
-                                    break;
-                                case QuestRewardType.QRT_PET:
-                                    questWriter.Write(reward.Value.PetID);
-                                    questWriter.Fill(4);
-                                    break;
-                                case QuestRewardType.QRT_MINIHOUSE:
-                                    questWriter.Write(reward.Value.MiniHouseID);
-                                    questWriter.Fill(7);
-                                    break;
-                                case QuestRewardType.QRT_TITLE:
-                                    questWriter.Write(reward.Value.TitleType);
-                                    questWriter.Write(reward.Value.TitleElementNo);
-                                    questWriter.Fill(6);
-                                    break;
-                                case QuestRewardType.QRT_KILLPOINT:
-                                    questWriter.Write(reward.Value.KillPoints);
-                                    questWriter.Fill(4);
-                                    break;
-                            }
-                        }
-
-                        questWriter.Write(quest.ScriptStartSize);
-                        questWriter.Write(quest.ScriptDoingSize);
-                        questWriter.Write(quest.ScriptEndSize);
-                        questWriter.Fill(2);
-                        questWriter.Write(quest.StartScriptID);
-                        questWriter.Write(quest.DoingScriptID);
-                        questWriter.Write(quest.EndScriptID);
-                        questWriter.Write(Encoding.ASCII.GetBytes(quest.StartScript));
-                        questWriter.Write(Encoding.ASCII.GetBytes(quest.DoingScript));
-                        questWriter.Write(Encoding.ASCII.GetBytes(quest.EndScript));
-
-                        var bytes = questStream.ToArray();
-
-                        writer.Write(bytes.Length + 4);
-                        writer.Write(bytes);
+                        writer.Write(mob.IsRequired);
+                        writer.Fill(1);
+                        writer.Write(mob.ID);
+                        writer.Write((byte)mob.Action);
+                        writer.Write(mob.Count);
+                        writer.Write(mob.TargetGroup);
+                        writer.Fill(1);
                     }
+
+                    for (var i = 0; i < 5; i++)
+                    {
+                        var item = quest.EndCondition.Items[i];
+
+                        writer.Write(item.IsRequired);
+                        writer.Fill(1);
+                        writer.Write(item.ID);
+                        writer.Write(item.Lot);
+                    }
+
+                    writer.Write(quest.EndCondition.RequiresLocation);
+                    writer.Fill(1);
+                    writer.Write(quest.EndCondition.LocationMapID);
+                    writer.Fill(2);
+                    writer.Write(quest.EndCondition.LocationX);
+                    writer.Write(quest.EndCondition.LocationY);
+                    writer.Write(quest.EndCondition.LocationRange);
+                    writer.Write(quest.EndCondition.IsScenario);
+                    writer.Fill(1);
+                    writer.Write(quest.EndCondition.ScenarioID);
+                    writer.Write(quest.EndCondition.RequiresRace);
+                    writer.Write(quest.EndCondition.Race);
+                    writer.Write(quest.EndCondition.RequiresClass);
+                    writer.Write((byte)quest.EndCondition.Class);
+                    writer.Write(quest.EndCondition.IsTimeLimit);
+                    writer.Fill(1);
+                    writer.Write(quest.EndCondition.TimeLimit);
+
+                    writer.Write(quest.ActionCount);
+                    writer.Fill(3);
+
+                    for (var i = 0; i < 10; i++)
+                    {
+                        var action = quest.Actions[i];
+
+                        writer.Write((byte)action.IfType);
+                        writer.Fill(3);
+                        writer.Write(action.IfTarget);
+                        writer.Write((byte)action.ThenType);
+                        writer.Fill(3);
+                        writer.Write(action.ThenTarget);
+                        writer.Write(action.ThenPercent);
+                        writer.Write(action.ThenMinCount);
+                        writer.Write(action.ThenMaxCount);
+                        writer.Write(action.TargetGroup);
+                        writer.Fill(3);
+                    }
+
+                    for (var i = 0; i < 12; i++)
+                    {
+                        var reward = quest.Rewards[i];
+
+                        writer.Write((byte)reward.Use);
+                        writer.Write((byte)reward.Type);
+                        writer.Fill(2);
+
+                        switch (reward.Type)
+                        {
+                            case QuestRewardType.QRT_EXP:
+                                writer.Write(reward.Value.EXP);
+                                break;
+                            case QuestRewardType.QRT_MONEY:
+                                writer.Write(reward.Value.Money);
+                                break;
+                            case QuestRewardType.QRT_ITEM:
+                                writer.Write(reward.Value.ItemID);
+                                writer.Write(reward.Value.ItemLot);
+                                writer.Fill(4);
+                                break;
+                            case QuestRewardType.QRT_ABSTATE:
+                                writer.Write(reward.Value.AbStateKeepTime);
+                                writer.Write(reward.Value.AbStateID);
+                                writer.Write(reward.Value.AbStateStrength);
+                                writer.Fill(1);
+                                break;
+                            case QuestRewardType.QRT_FAME:
+                                writer.Write(reward.Value.Fame);
+                                writer.Fill(4);
+                                break;
+                            case QuestRewardType.QRT_PET:
+                                writer.Write(reward.Value.PetID);
+                                writer.Fill(4);
+                                break;
+                            case QuestRewardType.QRT_MINIHOUSE:
+                                writer.Write(reward.Value.MiniHouseID);
+                                writer.Fill(7);
+                                break;
+                            case QuestRewardType.QRT_TITLE:
+                                writer.Write(reward.Value.TitleType);
+                                writer.Write(reward.Value.TitleElementNo);
+                                writer.Fill(6);
+                                break;
+                            case QuestRewardType.QRT_KILLPOINT:
+                                writer.Write(reward.Value.KillPoints);
+                                writer.Fill(4);
+                                break;
+                        }
+                    }
+
+                    writer.Write(quest.ScriptStartSize);
+                    writer.Write(quest.ScriptDoingSize);
+                    writer.Write(quest.ScriptEndSize);
+                    writer.Fill(2);
+                    writer.Write(quest.StartScriptID);
+                    writer.Write(quest.DoingScriptID);
+                    writer.Write(quest.EndScriptID);
+                    writer.Write(Encoding.ASCII.GetBytes(quest.StartScript));
+                    writer.Write(Encoding.ASCII.GetBytes(quest.DoingScript));
+                    writer.Write(Encoding.ASCII.GetBytes(quest.EndScript));
+
+                    var endLength = stream.Length;
+
+                    writer.Seek((int) lengthPosition, SeekOrigin.Begin);
+                    writer.Write((int) (endLength - startLength));
+                    stream.Position = endLength;
                 }
 
                 File.WriteAllBytes(filePath, stream.ToArray());
@@ -554,52 +554,6 @@ namespace QuestEditor
             {
                 return false;
             }
-        }
-
-        private static readonly int KEY_SIZE = 32;
-        private static readonly byte[] IV = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-        public static string EncryptString(string plaintext, string password)
-        {
-            var key = new byte[KEY_SIZE];
-            var passwordbytes = Encoding.UTF8.GetBytes(password);
-
-            for (int i = 0; i < KEY_SIZE; i++)
-            {
-                if (i >= passwordbytes.Length)
-                    key[i] = 0;
-                else
-                    key[i] = passwordbytes[i];
-            }
-
-            byte[] encrypted;
-
-            // Create an AesCryptoServiceProvider object
-            // with the specified key and IV.
-            using (var aesAlg = new AesManaged())
-            {
-                aesAlg.Mode = CipherMode.CBC;
-                aesAlg.KeySize = KEY_SIZE * 8;
-
-                // Create a decrytor to perform the stream transform.
-                var encryptor = aesAlg.CreateEncryptor(key, IV);
-
-                // Create the streams used for encryption.
-                using (var msEncrypt = new MemoryStream())
-                {
-                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (var swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            //Write all data to the stream.
-                            swEncrypt.Write(plaintext);
-                        }
-                        encrypted = msEncrypt.ToArray();
-                    }
-                }
-            }
-
-            return Convert.ToBase64String(encrypted);
         }
 
         private void MassEXPModifierToolStripMenuItem_Click(object sender, EventArgs e)

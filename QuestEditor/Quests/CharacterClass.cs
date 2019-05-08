@@ -4,6 +4,7 @@ namespace QuestEditor.Quests
 {
     public enum CharacterClass : byte
     {
+        None = 0,
         Fighter = 1,
         CleverFighter = 2,
         Warrior = 3,
@@ -31,7 +32,6 @@ namespace QuestEditor.Quests
         Reaper = 25,
         Crusader = 26,
         Templar = 27,
-        Max = 28,
-        None = 255
+        Max = 28
     }
 }

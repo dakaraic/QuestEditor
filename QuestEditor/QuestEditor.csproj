@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\BinaryWriterExtensions.cs" />
     <Compile Include="IO\BinaryWriterExtensions.cs" />
     <Compile Include="Quests\CharacterClass.cs" />
     <Compile Include="Quests\Gender.cs" />
