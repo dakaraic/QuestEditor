@@ -215,8 +215,7 @@ namespace QuestEditor
                     var startLength = stream.Length;
 
                     writer.Write(0);
-                    writer.Write(quest.ID);
-                    writer.Fill(2);
+                    writer.Write((int) quest.ID);
                     writer.Write(quest.NameID);
                     writer.Write(quest.BriefID);
                     writer.Write(quest.Region);
@@ -225,6 +224,7 @@ namespace QuestEditor
                     writer.Write((byte)quest.DailyQuestType);
                     writer.Fill(4);
 
+                    // Start Condition
                     writer.Write(quest.StartCondition.IsWaitListView);
                     writer.Write(quest.StartCondition.IsWaitListProgress);
                     writer.Write(quest.StartCondition.RequiresLevel);
@@ -375,21 +375,21 @@ namespace QuestEditor
                         }
                     }
 
-                    writer.Write(quest.ScriptStartSize);
-                    writer.Write(quest.ScriptDoingSize);
-                    writer.Write(quest.ScriptEndSize);
-                    writer.Fill(2);
+                    writer.Write((ushort) (quest.StartScript.Length + 1));
+                    writer.Write((ushort) (quest.DoingScript.Length + 1));
+                    writer.Write((ushort) (quest.EndScript.Length + 1));
+                    writer.Write((ushort) 0);
                     writer.Write(quest.StartScriptID);
                     writer.Write(quest.DoingScriptID);
                     writer.Write(quest.EndScriptID);
-                    writer.Write(Encoding.ASCII.GetBytes(quest.StartScript));
-                    writer.Write(Encoding.ASCII.GetBytes(quest.DoingScript));
-                    writer.Write(Encoding.ASCII.GetBytes(quest.EndScript));
+                    writer.Write(Encoding.ASCII.GetBytes(quest.StartScript + char.MinValue));
+                    writer.Write(Encoding.ASCII.GetBytes(quest.DoingScript + char.MinValue));
+                    writer.Write(Encoding.ASCII.GetBytes(quest.EndScript + char.MinValue));
 
                     var endLength = stream.Length;
 
                     writer.Seek((int) lengthPosition, SeekOrigin.Begin);
-                    writer.Write((int) (endLength - startLength));
+                    writer.Write((int) (endLength - startLength) - 4);
                     stream.Position = endLength;
                 }
 

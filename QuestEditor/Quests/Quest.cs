@@ -1,5 +1,6 @@
 ﻿// Copyright 2019 RED Software, LLC. All Rights Reserved.
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -59,8 +60,7 @@ namespace QuestEditor.Quests
                 using (var stream = new MemoryStream(data))
                 using (var reader = new BinaryReader(stream))
                 {
-                    quest.ID = reader.ReadUInt16();
-                    reader.ReadBytes(2);
+                    quest.ID = (ushort) reader.ReadInt32();
                     quest.NameID = reader.ReadInt32();
                     quest.BriefID = reader.ReadInt32();
                     quest.Region = reader.ReadByte();
@@ -228,13 +228,17 @@ namespace QuestEditor.Quests
                     quest.ScriptStartSize = reader.ReadUInt16();
                     quest.ScriptDoingSize = reader.ReadUInt16();
                     quest.ScriptEndSize = reader.ReadUInt16();
-                    reader.ReadBytes(2);
+                    reader.ReadUInt16();
                     quest.StartScriptID = reader.ReadInt32();
                     quest.DoingScriptID = reader.ReadInt32();
                     quest.EndScriptID = reader.ReadInt32();
                     quest.StartScript = Encoding.ASCII.GetString(reader.ReadBytes(quest.ScriptStartSize));
                     quest.DoingScript = Encoding.ASCII.GetString(reader.ReadBytes(quest.ScriptDoingSize));
                     quest.EndScript = Encoding.ASCII.GetString(reader.ReadBytes(quest.ScriptEndSize));
+
+                    quest.StartScript = quest.StartScript.Substring(0, Math.Max(0, quest.StartScript.IndexOf(char.MinValue)));
+                    quest.DoingScript = quest.DoingScript.Substring(0, Math.Max(0, quest.DoingScript.IndexOf(char.MinValue)));
+                    quest.EndScript = quest.EndScript.Substring(0, Math.Max(0, quest.EndScript.IndexOf(char.MinValue)));
                 }
 
                 return quest;
