@@ -147,7 +147,7 @@ namespace QuestEditor.Quests
                     quest.EndCondition.RequiresRace = reader.ReadBoolean();
                     quest.EndCondition.Race = reader.ReadByte();
                     quest.EndCondition.RequiresClass = reader.ReadBoolean();
-                    quest.EndCondition.Class = (UseClassType)reader.ReadByte();
+                    quest.EndCondition.Class = (CharacterClass)reader.ReadByte();
                     quest.EndCondition.IsTimeLimit = reader.ReadBoolean();
                     reader.ReadBytes(1);
                     quest.EndCondition.TimeLimit = reader.ReadUInt16();

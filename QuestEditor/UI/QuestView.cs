@@ -317,7 +317,7 @@ namespace QuestEditor.UI
                 quest.EndCondition.RequiresRace = chkEndRace.Checked;
                 quest.EndCondition.Race = byte.Parse(txtEndRace.Text);
                 quest.EndCondition.RequiresClass = chkEndClass.Checked;
-                quest.EndCondition.Class = (UseClassType) cmbEndClass.SelectedIndex;
+                quest.EndCondition.Class = (CharacterClass) cmbEndClass.SelectedIndex;
                 quest.EndCondition.IsTimeLimit = chkTimeLimit.Checked;
                 quest.EndCondition.TimeLimit = ushort.Parse(txtTimeLimit.Text);
 

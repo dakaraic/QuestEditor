@@ -19,7 +19,7 @@ namespace QuestEditor.Quests
         public bool RequiresRace { get; set; }
         public byte Race { get; set; }
         public bool RequiresClass { get; set; }
-        public UseClassType Class { get; set; } = UseClassType.UCT_ALL;
+        public CharacterClass Class { get; set; }
         public bool IsTimeLimit { get; set; }
         public ushort TimeLimit { get; set; }
 

@@ -85,7 +85,6 @@
     <Compile Include="Quests\QuestStartDateMode.cs" />
     <Compile Include="Quests\QuestStatus.cs" />
     <Compile Include="Quests\QuestType.cs" />
-    <Compile Include="Quests\UseClassType.cs" />
     <Compile Include="UI\MassCenEditor.cs">
       <SubType>Form</SubType>
     </Compile>
