@@ -124,8 +124,9 @@ namespace QuestEditor
                 {
                     while (reader.Read())
                     {
-                        QuestDialog.Remove((ushort) reader.GetValue(0));
-                        QuestDialog.Add((ushort) reader.GetValue(0), reader.GetString(1));
+                        var id = Convert.ToUInt32(reader.GetValue(0));
+                        QuestDialog.Remove(id);
+                        QuestDialog.Add(id, reader.GetString(1));
                     }
                 }
             }
