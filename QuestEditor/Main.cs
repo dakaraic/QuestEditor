@@ -124,8 +124,8 @@ namespace QuestEditor
                 {
                     while (reader.Read())
                     {
-                        QuestDialog.Remove((uint) reader.GetValue(0));
-                        QuestDialog.Add((uint) reader.GetValue(0), reader.GetString(1));
+                        QuestDialog.Remove((ushort) reader.GetValue(0));
+                        QuestDialog.Add((ushort) reader.GetValue(0), reader.GetString(1));
                     }
                 }
             }
@@ -389,7 +389,7 @@ namespace QuestEditor
                     var endLength = stream.Length;
 
                     writer.Seek((int) lengthPosition, SeekOrigin.Begin);
-                    writer.Write((int) (endLength - startLength) - 4);
+                    writer.Write((int) (endLength - startLength));
                     stream.Position = endLength;
                 }
 
