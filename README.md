@@ -1,2 +1,2 @@
 # QuestEditor
-Quest editor for the latest Fiesta Online files.
+Quest editor for Fiesta Online.
