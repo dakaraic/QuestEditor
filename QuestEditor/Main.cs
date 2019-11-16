@@ -8,10 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
 
@@ -27,7 +23,6 @@ namespace QuestEditor
 
         private ushort header;
         private string filePath;
-        private bool hasVerifiedSSL;
 
         public Main()
         {
@@ -40,25 +35,6 @@ namespace QuestEditor
                 massMoneyModifierToolStripMenuItem,
                 massFameModifierToolStripMenuItem
             });
-        }
-
-        /// <summary>
-        /// Finds the MAC address of the NIC with maximum speed.
-        /// </summary>
-        /// <returns>The MAC address.</returns>
-        private string GetMacAddress()
-        {
-            var macAddress = string.Empty;
-            
-            foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (macAddress == string.Empty)
-                {
-                    macAddress = nic.GetPhysicalAddress().ToString();
-                }
-            }
-
-            return macAddress;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -377,8 +353,8 @@ namespace QuestEditor
                     }
 
                     writer.Write((ushort) (quest.StartScript.Length + 1));
-                    writer.Write((ushort) (quest.DoingScript.Length + 1));
                     writer.Write((ushort) (quest.EndScript.Length + 1));
+                    writer.Write((ushort) (quest.DoingScript.Length + 1));
                     writer.Write((ushort) 0);
                     writer.Write(quest.StartScriptID);
                     writer.Write(quest.DoingScriptID);
@@ -493,68 +469,6 @@ namespace QuestEditor
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Quests?.DeleteCurrent();
-        }
-
-        private void Main_Load(object sender, EventArgs e)
-        {
-            if (!CheckForInternetConnection())
-            {
-                MessageBox.Show("You are not connected to the internet.", "RED Software Quest Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
-            }
-
-            try
-            {
-                ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
-
-                using (var client = new WebClient())
-                {
-                    var result = client.DownloadString($"https://cdn.redware.co/quest/auth.php?mac={GetMacAddress()}");
-
-                    if (!hasVerifiedSSL || result != "52FWG3DXU0ALPR03N3NK")
-                    {
-                        MessageBox.Show("You do not have access to this software.\nPurchase the product from RED Software to gain access.", "RED Software Quest Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Environment.Exit(0);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Failed to authenticate the user.", "RED Software Quest Editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
-            }
-        }
-
-        private bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
-        {
-            if (sslpolicyerrors != SslPolicyErrors.None)
-            {
-                return false;
-            }
-
-            if (certificate.GetCertHashString() != "ADDF4825DA5FDF5182DE6AD3ED8D4327244307A9" || certificate.Subject != "CN=sni219021.cloudflaressl.com, OU=PositiveSSL Multi-Domain, OU=Domain Control Validated")
-            {
-                Environment.Exit(0);
-            }
-
-            hasVerifiedSSL = true;
-            return true;
-        }
-
-        public static bool CheckForInternetConnection()
-        {
-            try
-            {
-                using (var client = new WebClient())
-                using (client.OpenRead("http://clients3.google.com/generate_204"))
-                {
-                    return true;
-                }
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         private void MassEXPModifierToolStripMenuItem_Click(object sender, EventArgs e)

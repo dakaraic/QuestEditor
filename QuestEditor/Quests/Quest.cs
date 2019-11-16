@@ -226,8 +226,8 @@ namespace QuestEditor.Quests
                     }
 
                     quest.ScriptStartSize = reader.ReadUInt16();
-                    quest.ScriptDoingSize = reader.ReadUInt16();
                     quest.ScriptEndSize = reader.ReadUInt16();
+                    quest.ScriptDoingSize = reader.ReadUInt16();
                     reader.ReadUInt16();
                     quest.StartScriptID = reader.ReadInt32();
                     quest.DoingScriptID = reader.ReadInt32();
